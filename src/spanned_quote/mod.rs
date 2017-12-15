@@ -110,7 +110,7 @@ macro_rules! declare_vars_for_quote {
     ) => {
         $(
             #[allow(non_snake_case)]
-            let $name = &$val;
+            let $name = $val;
         )*
 
         // This macro quotes only one token at once.
@@ -246,7 +246,7 @@ macro_rules! smart_quote {
             )*
         }
     ) => {{
-        move |_tokens: &mut $crate::Quote| {
+        |_tokens: &mut $crate::Quote| {
             handle_vars_for_quote!(@NORMALIZED{}, $($vars)*);
 
             _tokens.report_loc(quoter_location!());
@@ -262,7 +262,7 @@ macro_rules! smart_quote {
             )*
         )
     ) => {{
-        move |_tokens: &mut $crate::Quote| {
+        |_tokens: &mut $crate::Quote| {
             handle_vars_for_quote!(@NORMALIZED{}, $($vars)*);
 
             _tokens.report_loc(quoter_location!());
