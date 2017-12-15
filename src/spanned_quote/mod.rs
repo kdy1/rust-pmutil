@@ -215,10 +215,7 @@ macro_rules! __sq_quote_closure {
 ///
 ///## Tokens
 /// As parsers for syntax highligters implement error recovery,
-///  tokens are wrapped in block like `{ tokens.. }`.
-/// Note that `rustfmt` works for this tokens,
-///  as invocation seems like a function call
-///  with `Vars{}` as first argument, and block expression as a second argument.
+///  tokens are wrapped in block or paren like `{ tokens.. }`/ `( tokens.. )`.
 ///
 ///# Example
 ///
@@ -241,7 +238,6 @@ macro_rules! __sq_quote_closure {
 ///```
 #[macro_export]
 macro_rules! smart_quote {
-    // Make last comma for vars optional
     (
         Vars{ $($vars:tt)* },
         {
@@ -249,6 +245,22 @@ macro_rules! smart_quote {
                 $tokens:tt
             )*
         }
+    ) => {{
+        move |_tokens: &mut $crate::Quote| {
+            handle_vars_for_quote!(@NORMALIZED{}, $($vars)*);
+
+            _tokens.report_loc(quoter_location!());
+            __sq_quote_tokens_to!(_tokens, $($tokens)*);
+        }
+    }};
+
+    (
+        Vars{ $($vars:tt)* },
+        (
+            $(
+                $tokens:tt
+            )*
+        )
     ) => {{
         move |_tokens: &mut $crate::Quote| {
             handle_vars_for_quote!(@NORMALIZED{}, $($vars)*);
