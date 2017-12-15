@@ -1,0 +1,20 @@
+[package]
+name = "pmutil"
+version = "0.1.0"
+authors = ["강동윤 <kdy1@outlook.kr>"]
+description = "Utils for proc-macro"
+repository = "https://github.com/kdy1/rust-pmutil"
+readme = "README.md"
+license = "Apache-2.0/MIT"
+
+[dependencies]
+quote = { git = 'https://github.com/dtolnay/quote' }
+proc-macro2 = { version = "0.1", features = ["unstable"] }
+
+[dependencies.syn]
+git = 'https://github.com/dtolnay/syn'
+features = ["parsing"]
+default-features = false
+
+[dependencies.synom]
+git = 'https://github.com/dtolnay/syn'
