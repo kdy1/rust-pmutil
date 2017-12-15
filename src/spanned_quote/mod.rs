@@ -110,7 +110,7 @@ macro_rules! declare_vars_for_quote {
     ) => {
         $(
             #[allow(non_snake_case)]
-            let $name = $val;
+            let $name = &$val;
         )*
 
         // This macro quotes only one token at once.
