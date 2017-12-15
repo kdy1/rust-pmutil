@@ -25,19 +25,6 @@ macro_rules! quoter_location {
 #[doc(hidden)]
 #[macro_export]
 macro_rules! handle_vars_for_quote {
-    // Make last comma optional.
-    (
-        @NORMALIZED {
-            $(
-                $name:ident: $value:expr,
-            )*
-        }
-    ) => {
-        declare_vars_for_quote!(
-            $($name: $value,)*
-        );
-    };
-
     (
         @NORMALIZED {
             $(
@@ -70,6 +57,20 @@ macro_rules! handle_vars_for_quote {
         @NORMALIZED {
             $($norm:tt)*
         },
+        $name:ident
+    ) => {
+        handle_vars_for_quote!(
+            @NORMALIZED {
+                $($norm)*
+                $name: $name,
+            },
+        )
+    };
+
+    (
+        @NORMALIZED {
+            $($norm:tt)*
+        },
         $name:ident: $value:expr,
         $($rest:tt)*
     ) => {
@@ -79,6 +80,20 @@ macro_rules! handle_vars_for_quote {
                 $name: $value,
             },
             $($rest)*
+        )
+    };
+
+    (
+        @NORMALIZED {
+            $($norm:tt)*
+        },
+        $name:ident: $value:expr
+    ) => {
+        handle_vars_for_quote!(
+            @NORMALIZED {
+                $($norm)*
+                $name: $value,
+            },
         )
     };
 }
