@@ -18,8 +18,6 @@ macro_rules! quoter_location {
 
 // ----- Start of variable handling macros.
 
-
-
 /// Usage: __sq_handle_vars! { a, b: expression(), c, };
 ///
 #[doc(hidden)]
@@ -98,7 +96,6 @@ macro_rules! handle_vars_for_quote {
     };
 }
 
-
 /// This macro handles `Vars`, and creates a new hidden macro used inside quasi-quotting.
 #[doc(hidden)]
 #[macro_export]
@@ -129,12 +126,7 @@ macro_rules! declare_vars_for_quote {
     };
 }
 
-
-
-
 // ----- End of variable handling macros.
-
-
 
 /// This macro assumes that `Vars` is already handled.
 #[doc(hidden)]
@@ -173,9 +165,6 @@ macro_rules! __sq_quote_tokens_to {
     };
 }
 
-
-
-
 #[doc(hidden)]
 #[macro_export]
 macro_rules! __sq_quote_closure {
@@ -186,7 +175,6 @@ macro_rules! __sq_quote_closure {
         }
     }};
 }
-
 
 /// ide-friendly quasi quotting.
 ///

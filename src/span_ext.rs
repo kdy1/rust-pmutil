@@ -1,4 +1,4 @@
-use proc_macro2::{Span, Term};
+use proc_macro2::Span;
 use syn;
 use synom_ext::FromSpan;
 
@@ -12,7 +12,7 @@ pub trait SpanExt: Copy {
     where
         S: AsRef<str>,
     {
-        syn::Ident::new(Term::intern(s.as_ref()), self.as_syn_span())
+        syn::Ident::new(s.as_ref(), self.into_pm2_span())
     }
 
     /// Creates `Token` from `self`.
@@ -24,20 +24,10 @@ pub trait SpanExt: Copy {
     }
 
     fn into_pm2_span(self) -> Span;
-
-
-    fn as_syn_span(self) -> syn::Span {
-        syn::Span(self.into_pm2_span())
-    }
 }
 
 impl SpanExt for Span {
     fn into_pm2_span(self) -> Self {
         self
-    }
-}
-impl SpanExt for syn::Span {
-    fn into_pm2_span(self) -> Span {
-        self.0
     }
 }

@@ -1,10 +1,9 @@
 //!
 //!
 use super::SpanExt;
-use proc_macro2::{Literal, Spacing, Span, Term, TokenNode, TokenTree};
-use syn;
+use proc_macro2::{Literal, Spacing, Span, TokenNode, TokenTree};
 use syn::*;
-use syn::Span as SynSpan;
+use syn::punctuated::Element;
 
 /// Creates a comment from `s`.
 pub fn comment<S>(s: S) -> Attribute
@@ -21,11 +20,12 @@ where
         path: Path {
             leading_colon: None,
             segments: vec![
-                PathSegment {
-                    ident: Ident::new(Term::intern("doc"), SynSpan(span)),
+                Element::End(PathSegment {
+                    ident: Ident::new("doc", span),
                     arguments: Default::default(),
-                },
-            ].into(),
+                }),
+            ].into_iter()
+                .collect(),
         },
         tts: vec![
             TokenTree {
@@ -37,7 +37,6 @@ where
                 kind: TokenNode::Literal(Literal::string(s.as_ref())),
             },
         ].into_iter()
-            .map(syn::TokenTree)
             .collect(),
     }
 }

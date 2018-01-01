@@ -1,15 +1,12 @@
 //! Span support for quasi-quotting.
 
-
 use proc_macro2::{Span, TokenNode, TokenStream, TokenTree};
 use quote::{ToTokens, Tokens};
 use std::cell::Cell;
-use syn::Span as SynSpan;
 
 pub trait Respan {
     /// Used while quasi quotting.
     fn span_for(&self, kind: &TokenNode) -> Span;
-
 
     fn respan(&self, tt: TokenTree) -> TokenTree {
         TokenTree {
@@ -24,12 +21,6 @@ impl Respan for Span {
         *self
     }
 }
-impl Respan for SynSpan {
-    fn span_for(&self, _: &TokenNode) -> Span {
-        self.0
-    }
-}
-
 
 impl<'a, S> Respan for &'a S
 where

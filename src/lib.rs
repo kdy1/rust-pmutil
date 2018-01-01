@@ -9,10 +9,8 @@ pub extern crate proc_macro2;
 pub extern crate proc_macro;
 pub extern crate quote;
 pub extern crate syn;
-pub extern crate synom;
 
 pub use self::span_ext::SpanExt;
-use proc_macro2::Term;
 use quote::{ToTokens, Tokens};
 pub use spanned_quote::Quote;
 use syn::Ident;
@@ -43,8 +41,7 @@ impl IdentExt for Ident {
         F: for<'a> FnOnce(&'a str) -> S,
         S: AsRef<str>,
     {
-        let sym = Term::intern(map(self.sym.as_str()).as_ref());
-        Ident::new(sym, self.span)
+        Ident::new(map(self.as_ref()).as_ref(), self.span)
     }
 }
 

@@ -1,7 +1,7 @@
 //! Utils for tokens from synom::tokens.
 
 use proc_macro2::Span;
-use syn::{self, tokens};
+use syn::token as tokens;
 
 /// See [SpanExt#as_token][] for usage. Create tokens from [Span][].
 ///
@@ -16,14 +16,6 @@ impl FromSpan for Span {
     #[inline(always)]
     fn from_span(span: Span) -> Self {
         span
-    }
-}
-
-
-impl FromSpan for syn::Span {
-    #[inline(always)]
-    fn from_span(span: Span) -> Self {
-        syn::Span(span)
     }
 }
 
@@ -93,6 +85,8 @@ bridge!(
     tokens::Dot,
     tokens::Dot2,
     tokens::Dot3,
+    tokens::DotDotEq,
+    tokens::Dyn,
     tokens::Else,
     tokens::Enum,
     tokens::Eq,
@@ -111,6 +105,7 @@ bridge!(
     tokens::Let,
     tokens::Loop,
     tokens::Lt,
+    tokens::Macro,
     tokens::Match,
     tokens::Mod,
     tokens::Move,

@@ -6,7 +6,7 @@ use std::collections::HashSet;
 use std::env;
 use std::fmt::{self, Display, Formatter, Write};
 use syn;
-use synom::Synom;
+use syn::synom::Synom;
 
 /// Buffer for quasi quotting.
 pub struct Quote {
@@ -62,7 +62,6 @@ impl Quote {
         Self::new(respan::FirstLast::from_tokens(tokens))
     }
 
-
     /// Shorthand for
     ///
     ///```rust,ignore
@@ -80,8 +79,6 @@ impl Quote {
     }
 }
 
-
-
 impl Quote {
     /// Parse tokens as `Node`.
     /// Panics if parsing failed.
@@ -91,7 +88,6 @@ impl Quote {
     {
         // TODO: Use span to report error.
         let Quote { tts, sources, .. } = self;
-
 
         let debug_tts = if env::var("DBG_DUMP").is_ok() {
             Some(tts.clone())
@@ -131,7 +127,6 @@ Error from syn: {err}
     }
 }
 
-
 /// Methods for quasi-quotting.
 impl Quote {
     #[doc(hidden)]
@@ -163,7 +158,6 @@ impl Quote {
             .map(|tt| span.as_ref().expect(INVALID_SPAN_STATE).respan(tt))
             .for_each(|tt| tts.append(tt));
     }
-
 
     /// Respan token and append it to `self`.
     pub fn push_node(&mut self, node: TokenNode) {
@@ -200,7 +194,7 @@ impl Quote {
 
     /// Appends node into `self` **without respanning**.
     pub fn push_tokens<T: ?Sized + ToTokens>(&mut self, node: &T) {
-        self.tts.append_tokens(node);
+        node.to_tokens(&mut self.tts);
     }
 }
 
@@ -212,7 +206,6 @@ impl IntoIterator for Quote {
         TokenStream::from(self.tts).into_iter()
     }
 }
-
 
 impl From<Quote> for TokenStream {
     fn from(quote: Quote) -> Self {
