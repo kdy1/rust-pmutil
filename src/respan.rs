@@ -60,7 +60,7 @@ impl FirstLast {
         let first_span = good_tokens
             .first()
             .map(|t| t.span)
-            .unwrap_or(Default::default());
+            .unwrap_or(Span::def_site());
         let last = good_tokens.last().map(|t| t.span).unwrap_or(first_span);
         FirstLast {
             first: Cell::new(Some(first_span)),

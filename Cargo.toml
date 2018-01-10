@@ -8,10 +8,10 @@ readme = "README.md"
 license = "Apache-2.0/MIT"
 
 [dependencies]
-quote = { git = 'https://github.com/dtolnay/quote' }
-proc-macro2 = { version = "0.1", features = ["unstable"] }
+quote = "0.4.2"
+proc-macro2 = { version = "0.2.1", features = ["nightly"] }
 
 [dependencies.syn]
-git = 'https://github.com/dtolnay/syn'
-features = ["parsing"]
+version = "0.12.3"
+features = ["derive", "parsing"]
 default-features = false

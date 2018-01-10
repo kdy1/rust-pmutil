@@ -3,7 +3,7 @@
 use super::SpanExt;
 use proc_macro2::{Literal, Spacing, Span, TokenNode, TokenTree};
 use syn::*;
-use syn::punctuated::Element;
+use syn::punctuated::Pair;
 
 /// Creates a comment from `s`.
 pub fn comment<S>(s: S) -> Attribute
@@ -20,7 +20,7 @@ where
         path: Path {
             leading_colon: None,
             segments: vec![
-                Element::End(PathSegment {
+                Pair::End(PathSegment {
                     ident: Ident::new("doc", span),
                     arguments: Default::default(),
                 }),
