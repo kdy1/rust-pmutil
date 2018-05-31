@@ -5,21 +5,22 @@
 
 #![recursion_limit = "128"]
 
-pub extern crate proc_macro2;
 pub extern crate proc_macro;
+pub extern crate proc_macro2;
 pub extern crate quote;
 pub extern crate syn;
 
 pub use self::span_ext::SpanExt;
-use quote::{ToTokens, Tokens};
+use proc_macro2::TokenStream;
+use quote::ToTokens;
 pub use spanned_quote::Quote;
 use syn::Ident;
 
 pub mod comment;
 pub mod prelude;
-pub mod spanned_quote;
 pub mod respan;
 mod span_ext;
+pub mod spanned_quote;
 pub mod synom_ext;
 
 /// Extension trait for [syn::Ident][].
@@ -41,13 +42,13 @@ impl IdentExt for Ident {
         F: for<'a> FnOnce(&'a str) -> S,
         S: AsRef<str>,
     {
-        Ident::new(map(self.as_ref()).as_ref(), self.span)
+        Ident::new(map(&format!("{}", self)).as_ref(), self.span())
     }
 }
 
 pub trait ToTokensExt: ToTokens {
-    fn dump(&self) -> Tokens {
-        let mut tmp = Tokens::new();
+    fn dump(&self) -> TokenStream {
+        let mut tmp = TokenStream::new();
         self.to_tokens(&mut tmp);
         tmp
     }

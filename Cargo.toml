@@ -8,10 +8,10 @@ readme = "README.md"
 license = "Apache-2.0/MIT"
 
 [dependencies]
-quote = "0.4.2"
-proc-macro2 = { version = "0.2.1", features = ["nightly"] }
+quote = "0.6.3"
+proc-macro2 = { version = "0.4.1", features = ["nightly"] }
 
 [dependencies.syn]
-version = "0.12.3"
+version = "0.14.1"
 features = ["derive", "parsing"]
 default-features = false

@@ -1,6 +1,6 @@
 use proc_macro;
-use proc_macro2::{Delimiter, Span, Term, TokenNode, TokenStream, TokenTree, TokenTreeIter};
-use quote::{ToTokens, Tokens};
+use proc_macro2::{Delimiter, Group, Ident, Span, TokenStream, TokenTree};
+use quote::{ToTokens, TokenStreamExt};
 use respan::{self, Respan};
 use std::collections::HashSet;
 use std::env;
@@ -10,7 +10,7 @@ use syn::synom::Synom;
 
 /// Buffer for quasi quotting.
 pub struct Quote {
-    tts: Tokens,
+    tts: TokenStream,
     span: Option<Box<(Respan + 'static)>>,
     /// Location of smart_quote! invokations.
     /// Used for error reporting.
@@ -39,7 +39,7 @@ impl Quote {
     pub fn new<S: Respan + 'static>(span: S) -> Self {
         Quote {
             span: Some(Box::new(span)),
-            tts: Default::default(),
+            tts: TokenStream::new(),
             sources: Default::default(),
         }
     }
@@ -95,7 +95,7 @@ impl Quote {
             None
         };
 
-        syn::parse(tts.into()).unwrap_or_else(|err| {
+        syn::parse2(tts).unwrap_or_else(|err| {
             let debug_tts: &Display = match debug_tts {
                 Some(ref tts) => tts,
                 None => {
@@ -159,20 +159,19 @@ impl Quote {
             .for_each(|tt| tts.append(tt));
     }
 
-    /// Respan token and append it to `self`.
-    pub fn push_node(&mut self, node: TokenNode) {
-        self.tts.append(TokenTree {
-            span: self.span
-                .as_ref()
-                .expect(INVALID_SPAN_STATE)
-                .span_for(&node),
-            kind: node,
-        })
+    /// Append `tt` to `self`.
+    pub fn push_tt(&mut self, tt: TokenTree) {
+        self.tts.append(tt)
     }
 
     /// Respan symbol and append it to `self`.
     pub fn push_sym(&mut self, term: &str) {
-        self.push_node(TokenNode::Term(Term::intern(term)))
+        let span = self.next_span();
+        self.push_tt(TokenTree::Ident(Ident::new(term, span)))
+    }
+
+    fn next_span(&self) -> Span {
+        self.span.as_ref().expect(INVALID_SPAN_STATE).next_span()
     }
 
     /// Respan and append `TokenStream::Group`
@@ -189,7 +188,7 @@ impl Quote {
         debug_assert!(self.span.is_none());
         self.span = Some(sub.span.expect(INVALID_SPAN_STATE));
 
-        self.push_node(TokenNode::Group(delim, sub.tts.into()))
+        self.push_tt(TokenTree::Group(Group::new(delim, sub.tts)))
     }
 
     /// Appends node into `self` **without respanning**.
@@ -199,21 +198,15 @@ impl Quote {
 }
 
 impl IntoIterator for Quote {
-    type IntoIter = TokenTreeIter;
-    type Item = TokenTree;
+    type IntoIter = <TokenStream as IntoIterator>::IntoIter;
+    type Item = <TokenStream as IntoIterator>::Item;
 
     fn into_iter(self) -> Self::IntoIter {
-        TokenStream::from(self.tts).into_iter()
+        self.tts.into_iter()
     }
 }
 
 impl From<Quote> for TokenStream {
-    fn from(quote: Quote) -> Self {
-        quote.tts.into()
-    }
-}
-
-impl From<Quote> for Tokens {
     fn from(quote: Quote) -> Self {
         quote.tts
     }
@@ -226,11 +219,11 @@ impl From<Quote> for proc_macro::TokenStream {
 }
 
 impl ToTokens for Quote {
-    fn to_tokens(&self, dst: &mut Tokens) {
+    fn to_tokens(&self, dst: &mut TokenStream) {
         self.tts.to_tokens(dst)
     }
 
-    fn into_tokens(self) -> Tokens {
+    fn into_token_stream(self) -> TokenStream {
         self.tts
     }
 }

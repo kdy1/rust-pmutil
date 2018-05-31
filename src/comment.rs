@@ -1,9 +1,9 @@
 //!
 //!
 use super::SpanExt;
-use proc_macro2::{Literal, Spacing, Span, TokenNode, TokenTree};
-use syn::*;
+use proc_macro2::{Literal, Punct, Spacing, Span, TokenTree};
 use syn::punctuated::Pair;
+use syn::*;
 
 /// Creates a comment from `s`.
 pub fn comment<S>(s: S) -> Attribute
@@ -19,23 +19,15 @@ where
         is_sugared_doc: true,
         path: Path {
             leading_colon: None,
-            segments: vec![
-                Pair::End(PathSegment {
-                    ident: Ident::new("doc", span),
-                    arguments: Default::default(),
-                }),
-            ].into_iter()
+            segments: vec![Pair::End(PathSegment {
+                ident: Ident::new("doc", span),
+                arguments: Default::default(),
+            })].into_iter()
                 .collect(),
         },
         tts: vec![
-            TokenTree {
-                span,
-                kind: TokenNode::Op('=', Spacing::Alone),
-            },
-            TokenTree {
-                span,
-                kind: TokenNode::Literal(Literal::string(s.as_ref())),
-            },
+            TokenTree::Punct(Punct::new('=', Spacing::Alone)),
+            TokenTree::Literal(Literal::string(s.as_ref())),
         ].into_iter()
             .collect(),
     }
