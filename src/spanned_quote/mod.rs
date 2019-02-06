@@ -8,12 +8,12 @@ pub use self::buffer::{Location, Quote};
 #[doc(hidden)]
 macro_rules! quoter_location {
     () => {{
-        $crate::spanned_quote::Location{
+        $crate::spanned_quote::Location {
             line: line!(),
             col: column!(),
             file_name: file!(),
         }
-    }}
+    }};
 }
 
 // ----- Start of variable handling macros.

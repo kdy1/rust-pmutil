@@ -6,7 +6,7 @@ use std::collections::HashSet;
 use std::env;
 use std::fmt::{self, Display, Formatter, Write};
 use syn;
-use syn::synom::Synom;
+use syn::parse::Parse;
 
 /// Buffer for quasi quotting.
 pub struct Quote {
@@ -84,7 +84,7 @@ impl Quote {
     /// Panics if parsing failed.
     pub fn parse<Node>(self) -> Node
     where
-        Node: Synom,
+        Node: Parse,
     {
         // TODO: Use span to report error.
         let Quote { tts, sources, .. } = self;

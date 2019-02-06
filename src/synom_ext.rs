@@ -1,7 +1,7 @@
 //! Utils for tokens from synom::tokens.
 
 use proc_macro2::Span;
-use syn::token as tokens;
+use syn::token::*;
 
 /// See [SpanExt#as_token][] for usage. Create tokens from [Span][].
 ///
@@ -37,15 +37,35 @@ macro_rules! impl_array {
 
 impl_array!(1, 2, 3, 4);
 
+macro_rules! bridge_spans {
+    // Done
+    ($t:path) => {
+        impl FromSpan for $t {
+            fn from_span(span: Span) -> Self {
+                let spans = FromSpan::from_span(span);
+                $t { spans }
+            }
+        }
+    };
+
+    ($t:path, $($rest:tt)+) => {
+        bridge_spans!($t);
+        bridge_spans!($($rest)*);
+    };
+}
+
 macro_rules! bridge {
     // Done
     ($t:path) => {
         impl FromSpan for $t {
             fn from_span(span: Span) -> Self {
                 let span = FromSpan::from_span(span);
-                $t(span)
+                $t { span }
             }
         }
+    };
+    ($t:path,) => {
+        bridge!($t);
     };
 
     ($t:path, $($rest:tt)+) => {
@@ -54,97 +74,68 @@ macro_rules! bridge {
     };
 }
 
+bridge_spans!(
+    AddEq, AndAnd, AndEq, CaretEq, Colon2, DivEq, Dot2, Dot3, DotDotEq, EqEq, FatArrow, LArrow, Le,
+    Lt, MulEq, Ne, Or, OrEq, OrOr, Pound, Ge, RArrow, RemEq, Shl, ShlEq, Shr, ShrEq, SubEq, Gt,
+    Rem, Tilde, Underscore, Star, Sub, Semi, Eq, Dot, Question, Add, And, At, Bang, Caret, Colon,
+    Dollar, Comma, Div
+);
+
 bridge!(
-    tokens::Add,
-    tokens::AddEq,
-    tokens::And,
-    tokens::AndAnd,
-    tokens::AndEq,
-    tokens::Apostrophe,
-    tokens::As,
-    tokens::At,
-    tokens::Auto,
-    tokens::Bang,
-    tokens::Box,
-    tokens::Brace,
-    tokens::Bracket,
-    tokens::Break,
-    tokens::CapSelf,
-    tokens::Caret,
-    tokens::CaretEq,
-    tokens::Catch,
-    tokens::Colon,
-    tokens::Colon2,
-    tokens::Comma,
-    tokens::Const,
-    tokens::Continue,
-    tokens::Crate,
-    tokens::Default,
-    tokens::Div,
-    tokens::DivEq,
-    tokens::Do,
-    tokens::Dot,
-    tokens::Dot2,
-    tokens::Dot3,
-    tokens::DotDotEq,
-    tokens::Dyn,
-    tokens::Else,
-    tokens::Enum,
-    tokens::Eq,
-    tokens::EqEq,
-    tokens::Extern,
-    tokens::FatArrow,
-    tokens::Fn,
-    tokens::For,
-    tokens::Ge,
-    tokens::Group,
-    tokens::Gt,
-    tokens::If,
-    tokens::Impl,
-    tokens::In,
-    tokens::LArrow,
-    tokens::Le,
-    tokens::Let,
-    tokens::Loop,
-    tokens::Lt,
-    tokens::Macro,
-    tokens::Match,
-    tokens::Mod,
-    tokens::Move,
-    tokens::MulEq,
-    tokens::Mut,
-    tokens::Ne,
-    tokens::Or,
-    tokens::OrEq,
-    tokens::OrOr,
-    tokens::Paren,
-    tokens::Pound,
-    tokens::Pub,
-    tokens::Question,
-    tokens::RArrow,
-    tokens::Ref,
-    tokens::Rem,
-    tokens::RemEq,
-    tokens::Return,
-    tokens::Self_,
-    tokens::Semi,
-    tokens::Shl,
-    tokens::ShlEq,
-    tokens::Shr,
-    tokens::ShrEq,
-    tokens::Star,
-    tokens::Static,
-    tokens::Struct,
-    tokens::Sub,
-    tokens::SubEq,
-    tokens::Super,
-    tokens::Trait,
-    tokens::Type,
-    tokens::Underscore,
-    tokens::Union,
-    tokens::Unsafe,
-    tokens::Use,
-    tokens::Where,
-    tokens::While,
-    tokens::Yield
+    Mod,
+    Abstract,
+    As,
+    Async,
+    Auto,
+    Become,
+    Box,
+    Brace,
+    Bracket,
+    Break,
+    Const,
+    Continue,
+    Crate,
+    Default,
+    Do,
+    Dyn,
+    Else,
+    Enum,
+    Existential,
+    Extern,
+    Final,
+    Fn,
+    For,
+    Group,
+    If,
+    Impl,
+    In,
+    Let,
+    Loop,
+    Macro,
+    Match,
+    Move,
+    Mut,
+    Override,
+    Paren,
+    Priv,
+    Pub,
+    Ref,
+    Return,
+    SelfType,
+    SelfValue,
+    Static,
+    Struct,
+    Super,
+    Trait,
+    Try,
+    Type,
+    Typeof,
+    Union,
+    Unsafe,
+    Unsized,
+    Use,
+    Virtual,
+    Where,
+    While,
+    Yield
 );
