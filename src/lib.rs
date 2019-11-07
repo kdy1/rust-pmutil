@@ -6,9 +6,9 @@
 #![recursion_limit = "128"]
 
 pub extern crate proc_macro;
-pub extern crate proc_macro2;
-pub extern crate quote;
-pub extern crate syn;
+pub use proc_macro2;
+pub use quote;
+pub use syn;
 
 pub use self::span_ext::SpanExt;
 use proc_macro2::TokenStream;

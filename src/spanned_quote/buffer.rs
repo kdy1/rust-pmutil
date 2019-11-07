@@ -1,17 +1,15 @@
-use proc_macro;
+use crate::respan::{self, Respan};
 use proc_macro2::{Delimiter, Group, Ident, Span, TokenStream, TokenTree};
 use quote::{ToTokens, TokenStreamExt};
-use respan::{self, Respan};
 use std::collections::HashSet;
 use std::env;
 use std::fmt::{self, Display, Formatter, Write};
-use syn;
 use syn::parse::Parse;
 
 /// Buffer for quasi quotting.
 pub struct Quote {
     tts: TokenStream,
-    span: Option<Box<(Respan + 'static)>>,
+    span: Option<Box<(dyn Respan + 'static)>>,
     /// Location of smart_quote! invokations.
     /// Used for error reporting.
     sources: HashSet<Location>,
@@ -58,7 +56,7 @@ impl Quote {
     /// ```rust,ignore
     /// Quote::new(tokens.first_last())
     /// ```
-    pub fn from_tokens(tokens: &ToTokens) -> Self {
+    pub fn from_tokens(tokens: &dyn ToTokens) -> Self {
         Self::new(respan::FirstLast::from_tokens(tokens))
     }
 
@@ -96,7 +94,7 @@ impl Quote {
         };
 
         syn::parse2(tts).unwrap_or_else(|err| {
-            let debug_tts: &Display = match debug_tts {
+            let debug_tts: &dyn Display = match debug_tts {
                 Some(ref tts) => tts,
                 None => {
                     &"To get code failed to parse,

@@ -1,6 +1,6 @@
+use crate::synom_ext::FromSpan;
 use proc_macro2::Span;
 use syn;
-use synom_ext::FromSpan;
 
 /// Extension trait for [Span][] and [syn::Span][].
 ///

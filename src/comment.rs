@@ -25,7 +25,7 @@ where
             .into_iter()
             .collect(),
         },
-        tts: vec![
+        tokens: vec![
             TokenTree::Punct(Punct::new('=', Spacing::Alone)),
             TokenTree::Literal(Literal::string(s.as_ref())),
         ]
