@@ -5,7 +5,7 @@
 
 #![recursion_limit = "128"]
 
-pub extern crate proc_macro;
+extern crate proc_macro;
 pub use proc_macro2;
 pub use quote;
 pub use syn;
