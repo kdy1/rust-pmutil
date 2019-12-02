@@ -30,7 +30,7 @@ macro_rules! handle_vars_for_quote {
             )*
         },
     ) => {
-        declare_vars_for_quote!(
+        $crate::declare_vars_for_quote!(
             $($name: $value,)*
         );
     };
@@ -42,7 +42,7 @@ macro_rules! handle_vars_for_quote {
         $name:ident,
         $($rest:tt)*
     ) => {
-        handle_vars_for_quote!(
+        $crate::handle_vars_for_quote!(
             @NORMALIZED {
                 $($norm)*
                 $name: $name,
@@ -57,7 +57,7 @@ macro_rules! handle_vars_for_quote {
         },
         $name:ident
     ) => {
-        handle_vars_for_quote!(
+        $crate::handle_vars_for_quote!(
             @NORMALIZED {
                 $($norm)*
                 $name: $name,
@@ -72,7 +72,7 @@ macro_rules! handle_vars_for_quote {
         $name:ident: $value:expr,
         $($rest:tt)*
     ) => {
-        handle_vars_for_quote!(
+        $crate::handle_vars_for_quote!(
             @NORMALIZED {
                 $($norm)*
                 $name: $value,
@@ -87,7 +87,7 @@ macro_rules! handle_vars_for_quote {
         },
         $name:ident: $value:expr
     ) => {
-        handle_vars_for_quote!(
+        $crate::handle_vars_for_quote!(
             @NORMALIZED {
                 $($norm)*
                 $name: $value,
@@ -136,32 +136,32 @@ macro_rules! __sq_quote_tokens_to {
     ($tokens:expr,) => {{}};
 
     ($tokens:expr, ( $($inner:tt)* ) $($rest:tt)*) => {{
-        $tokens.push_group(::proc_macro2::Delimiter::Parenthesis, __sq_quote_closure! {
+        $tokens.push_group(::proc_macro2::Delimiter::Parenthesis, $crate::__sq_quote_closure! {
             $($inner)*
         });
-        __sq_quote_tokens_to!($tokens, $($rest)*);
+        $crate::__sq_quote_tokens_to!($tokens, $($rest)*);
     }};
 
 
     ($tokens:expr, { $($inner:tt)* }  $($rest:tt)*) => {{
-        $tokens.push_group(::proc_macro2::Delimiter::Brace, __sq_quote_closure! {
+        $tokens.push_group(::proc_macro2::Delimiter::Brace, $crate::__sq_quote_closure! {
             $($inner)*
         });
-        __sq_quote_tokens_to!($tokens, $($rest)*);
+        $crate::__sq_quote_tokens_to!($tokens, $($rest)*);
     }};
 
     ($tokens:expr, [ $($inner:tt)* ]  $($rest:tt)*) => {{
-        $tokens.push_group(::proc_macro2::Delimiter::Bracket, __sq_quote_closure! {
+        $tokens.push_group(::proc_macro2::Delimiter::Bracket, $crate::__sq_quote_closure! {
             $($inner)*
         });
-        __sq_quote_tokens_to!($tokens, $($rest)*);
+        $crate::__sq_quote_tokens_to!($tokens, $($rest)*);
     }};
 
     // If we have to quote one token, check if user declared variable.
     ($tokens:expr, $first:tt $($rest:tt)*) => {
         __sq_push_token_custom!($tokens, $first);
 
-        __sq_quote_tokens_to!($tokens, $($rest)*);
+        $crate::__sq_quote_tokens_to!($tokens, $($rest)*);
     };
 }
 
@@ -170,8 +170,8 @@ macro_rules! __sq_quote_tokens_to {
 macro_rules! __sq_quote_closure {
     ( $($tokens:tt)* ) => {{
         |_tokens: &mut $crate::Quote| {
-            _tokens.report_loc(quoter_location!());
-            __sq_quote_tokens_to!(_tokens, $($tokens)*);
+            _tokens.report_loc($crate::quoter_location!());
+            $crate::__sq_quote_tokens_to!(_tokens, $($tokens)*);
         }
     }};
 }
@@ -235,10 +235,10 @@ macro_rules! smart_quote {
         }
     ) => {{
         |_tokens: &mut $crate::Quote| {
-            handle_vars_for_quote!(@NORMALIZED{}, $($vars)*);
+            $crate::handle_vars_for_quote!(@NORMALIZED{}, $($vars)*);
 
-            _tokens.report_loc(quoter_location!());
-            __sq_quote_tokens_to!(_tokens, $($tokens)*);
+            _tokens.report_loc($crate::quoter_location!());
+            $crate::__sq_quote_tokens_to!(_tokens, $($tokens)*);
         }
     }};
 
@@ -251,10 +251,10 @@ macro_rules! smart_quote {
         )
     ) => {{
         |_tokens: &mut $crate::Quote| {
-            handle_vars_for_quote!(@NORMALIZED{}, $($vars)*);
+            $crate::handle_vars_for_quote!(@NORMALIZED{}, $($vars)*);
 
-            _tokens.report_loc(quoter_location!());
-            __sq_quote_tokens_to!(_tokens, $($tokens)*);
+            _tokens.report_loc($crate::quoter_location!());
+            $crate::__sq_quote_tokens_to!(_tokens, $($tokens)*);
         }
     }};
 }
