@@ -165,17 +165,6 @@ macro_rules! __sq_quote_tokens_to {
     };
 }
 
-#[doc(hidden)]
-#[macro_export]
-macro_rules! __sq_quote_closure {
-    ( $($tokens:tt)* ) => {{
-        |_tokens: &mut $crate::Quote| {
-            _tokens.report_loc($crate::quoter_location!());
-            $crate::__sq_quote_tokens_to!(_tokens, $($tokens)*);
-        }
-    }};
-}
-
 /// ide-friendly quasi quotting.
 ///
 ///# Syntax
@@ -256,5 +245,24 @@ macro_rules! smart_quote {
             _tokens.report_loc($crate::quoter_location!());
             $crate::__sq_quote_tokens_to!(_tokens, $($tokens)*);
         }
+    }};
+}
+
+#[doc(hidden)]
+#[macro_export]
+macro_rules! __sq_quote_closure {
+    ( $($tokens:tt)* ) => {{
+        |_tokens: &mut $crate::Quote| {
+            _tokens.report_loc($crate::quoter_location!());
+            $crate::__sq_quote_tokens_to!(_tokens, $($tokens)*);
+        }
+    }};
+}
+
+/// Shortcut for `Quote::new_call_site().quote_with(smart_quote!( $tokens ))`
+#[macro_export]
+macro_rules! q {
+    ( $($tokens:tt)* ) => {{
+        $crate::Quote::new_call_site().quote_with($crate::smart_quote!( $($tokens)* ))
     }};
 }
