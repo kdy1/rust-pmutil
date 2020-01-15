@@ -1,3 +1,6 @@
+[workspace]
+members = ["testing"]
+
 [package]
 name = "pmutil"
 version = "0.5.3"
