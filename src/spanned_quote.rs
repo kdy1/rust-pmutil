@@ -238,14 +238,9 @@ macro_rules! smart_quote {
                 $tokens:tt
             )*
         )
-    ) => {{
-        |_tokens: &mut $crate::Quote| {
-            $crate::handle_vars_for_quote!(@NORMALIZED{}, $($vars)*);
-
-            _tokens.report_loc($crate::quoter_location!());
-            $crate::__sq_quote_tokens_to!(_tokens, $($tokens)*);
-        }
-    }};
+    ) => {
+        $crate::smart_quote!(Vars { $($vars)* }, { $($token)* })
+    };
 }
 
 #[doc(hidden)]
