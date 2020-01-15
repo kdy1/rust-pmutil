@@ -232,6 +232,16 @@ macro_rules! smart_quote {
     }};
 
     (
+        {
+            $(
+                $tokens:tt
+            )*
+        }
+    ) => {{
+        $crate::smart_quote!(Vars {}, { $($token)* })
+    }};
+
+    (
         Vars{ $($vars:tt)* },
         (
             $(
@@ -240,6 +250,16 @@ macro_rules! smart_quote {
         )
     ) => {
         $crate::smart_quote!(Vars { $($vars)* }, { $($token)* })
+    };
+
+    (
+        (
+            $(
+                $tokens:tt
+            )*
+        )
+    ) => {
+        $crate::smart_quote!(Vars {}, { $($token)* })
     };
 }
 
