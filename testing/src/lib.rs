@@ -43,3 +43,14 @@ pub fn expanded_fn_like(_: proc_macro::TokenStream) -> proc_macro::TokenStream {
         }))
         .into()
 }
+
+#[proc_macro]
+pub fn vars_1(_: proc_macro::TokenStream) -> proc_macro::TokenStream {
+    Quote::new_call_site()
+        .quote_with(smart_quote!(Vars { a: "foo" }, {
+            fn output_vars_1() -> &'static str {
+                a
+            }
+        }))
+        .into()
+}
