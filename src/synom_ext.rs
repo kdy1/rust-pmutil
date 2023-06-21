@@ -81,6 +81,8 @@ bridge_spans!(
     SlashEq, Star, StarEq, Tilde
 );
 
+bridge!(Brace, Bracket, Paren);
+
 bridge!(
     Abstract, As, Async, Auto, Await, Become, Box, Break, Const, Continue, Crate, Default, Do, Dyn,
     Else, Enum, Extern, Final, Fn, For, If, Impl, In, Let, Loop, Macro, Match, Mod, Move, Mut,
