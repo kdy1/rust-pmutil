@@ -3,7 +3,7 @@ members = ["testing"]
 
 [package]
 name = "pmutil"
-version = "0.5.3"
+version = "0.6.0"
 authors = ["강동윤 <kdy1@outlook.kr>"]
 description = "Utils for proc-macro"
 repository = "https://github.com/kdy1/rust-pmutil"
