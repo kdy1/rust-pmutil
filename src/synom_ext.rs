@@ -1,6 +1,6 @@
 //! Utils for tokens from synom::tokens.
 
-use proc_macro2::Span;
+use proc_macro2::{extra::DelimSpan, Span};
 use syn::token::*;
 
 /// See [SpanExt#as_token][] for usage. Create tokens from [Span][].
@@ -74,6 +74,25 @@ macro_rules! bridge {
     };
 }
 
+macro_rules! bridge_group {
+    // Done
+    ($t:path) => {
+    impl FromSpan for $t {
+        fn from_span(span: Span) -> Self {
+            $t(span)
+        }
+    }
+    };
+    ($t:path,) => {
+        bridge_group!($t);
+    };
+
+    ($t:path, $($rest:tt)+) => {
+        bridge_group!($t);
+        bridge_group!($($rest)*);
+    };
+}
+
 bridge_spans!(
     And, AndAnd, AndEq, At, Caret, CaretEq, Colon, Comma, Dollar, Dot, DotDot, DotDotDot, DotDotEq,
     Eq, EqEq, FatArrow, Ge, Gt, LArrow, Le, Lt, Minus, MinusEq, Ne, Not, Or, OrEq, OrOr, PathSep,
@@ -81,7 +100,7 @@ bridge_spans!(
     SlashEq, Star, StarEq, Tilde
 );
 
-bridge!(Brace, Bracket, Paren);
+bridge_group!(Brace, Bracket, Paren);
 
 bridge!(
     Abstract, As, Async, Auto, Await, Become, Box, Break, Const, Continue, Crate, Default, Do, Dyn,
