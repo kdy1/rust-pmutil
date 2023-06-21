@@ -1,7 +1,7 @@
 //!
 //!
 use super::SpanExt;
-use proc_macro2::{Literal, Punct, Spacing, Span, TokenTree};
+use proc_macro2::Span;
 use syn::punctuated::Pair;
 use syn::*;
 
@@ -16,20 +16,21 @@ where
         style: AttrStyle::Outer,
         bracket_token: span.as_token(),
         pound_token: span.as_token(),
-        path: Path {
-            leading_colon: None,
-            segments: vec![Pair::End(PathSegment {
-                ident: Ident::new("doc", span),
-                arguments: Default::default(),
-            })]
-            .into_iter()
-            .collect(),
-        },
-        tokens: vec![
-            TokenTree::Punct(Punct::new('=', Spacing::Alone)),
-            TokenTree::Literal(Literal::string(s.as_ref())),
-        ]
-        .into_iter()
-        .collect(),
+        meta: Meta::NameValue(MetaNameValue {
+            path: Path {
+                leading_colon: None,
+                segments: vec![Pair::End(PathSegment {
+                    ident: Ident::new("doc", span),
+                    arguments: Default::default(),
+                })]
+                .into_iter()
+                .collect(),
+            },
+            eq_token: span.as_token(),
+            value: Expr::Lit(ExprLit {
+                attrs: Default::default(),
+                lit: Lit::Str(LitStr::new(s.as_ref(), span)),
+            }),
+        }),
     }
 }

@@ -15,7 +15,7 @@ pub struct Quote {
     sources: HashSet<Location>,
 }
 
-const INVALID_SPAN_STATE: &'static str = "Span is in invalid state.
+const INVALID_SPAN_STATE: &str = "Span is in invalid state.
 Closure provided to push_group should not panic.";
 
 /// Location of `smart_quote!` macro invocation.
@@ -105,7 +105,7 @@ impl Quote {
             let notes = {
                 let mut b = String::from("Note: quasi quotting was invoked from:\n");
                 for src in &sources {
-                    writeln!(b, "       {}", src).unwrap();
+                    writeln!(b, "       {src}").unwrap();
                 }
                 b
             };

@@ -42,7 +42,7 @@ impl IdentExt for Ident {
         F: for<'a> FnOnce(&'a str) -> S,
         S: AsRef<str>,
     {
-        Ident::new(map(&format!("{}", self)).as_ref(), self.span())
+        Ident::new(map(&format!("{self}")).as_ref(), self.span())
     }
 }
 
