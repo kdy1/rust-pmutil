@@ -1,6 +1,6 @@
 //! Utils for tokens from synom::tokens.
 
-use proc_macro2::{extra::DelimSpan, Span};
+use proc_macro2::Span;
 use syn::token::*;
 
 /// See [SpanExt#as_token][] for usage. Create tokens from [Span][].

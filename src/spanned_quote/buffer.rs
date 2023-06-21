@@ -105,7 +105,7 @@ impl Quote {
             let notes = {
                 let mut b = String::from("Note: quasi quotting was invoked from:\n");
                 for src in &sources {
-                    writeln!(b, "       {}", src).unwrap();
+                    writeln!(b, "       {src}").unwrap();
                 }
                 b
             };

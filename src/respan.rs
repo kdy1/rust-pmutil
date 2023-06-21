@@ -62,7 +62,7 @@ impl FirstLast {
     pub fn from_tokens(tokens: &dyn ToTokens) -> Self {
         let mut spans = TokenStream::new();
         tokens.to_tokens(&mut spans);
-        let good_tokens = TokenStream::from(spans).into_iter().collect::<Vec<_>>();
+        let good_tokens = spans.into_iter().collect::<Vec<_>>();
         let first_span = good_tokens
             .first()
             .map(|t| t.span())
