@@ -97,7 +97,7 @@ bridge_spans!(
     And, AndAnd, AndEq, At, Caret, CaretEq, Colon, Comma, Dollar, Dot, DotDot, DotDotDot, DotDotEq,
     Eq, EqEq, FatArrow, Ge, Gt, LArrow, Le, Lt, Minus, MinusEq, Ne, Not, Or, OrEq, OrOr, PathSep,
     Percent, PercentEq, Plus, PlusEq, Pound, Question, RArrow, Semi, Shl, ShlEq, Shr, ShrEq, Slash,
-    SlashEq, Star, StarEq, Tilde
+    SlashEq, Star, StarEq, Tilde, Underscore
 );
 
 bridge_group!(Brace, Bracket, Paren);
@@ -106,5 +106,5 @@ bridge!(
     Abstract, As, Async, Auto, Await, Become, Box, Break, Const, Continue, Crate, Default, Do, Dyn,
     Else, Enum, Extern, Final, Fn, For, If, Impl, In, Let, Loop, Macro, Match, Mod, Move, Mut,
     Override, Priv, Pub, Ref, Return, SelfType, SelfValue, Static, Struct, Super, Trait, Try, Type,
-    Typeof, Union, Unsafe, Unsized, Use, Virtual, Where, While, Yield
+    Typeof, Union, Unsafe, Unsized, Use, Virtual, Where, While, Yield,
 );
